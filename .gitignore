@@ -3,3 +3,7 @@
 
 #maven
 target
+
+#driver
+*.exe
+src/main/resources/chromedriver.exe
