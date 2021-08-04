@@ -6,34 +6,39 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import java.security.InvalidParameterException;
 import java.time.Duration;
 
 public abstract class DriverFactory {
 
-    private WebDriver webDriver;
+    private static WebDriver webDriver;
 
-    protected void initDriver(final String browserName) {
-        if (DriverConfigs.CHROME_NAME.equalsIgnoreCase(browserName)) {
-            System.setProperty(DriverConfigs.CHROME_NAME, DriverConfigs.CHROME_DRIVER_LOCATION);
+    public static void initDriver(final String browserName) {
+        if (DriverConfigs.CHROME.getName().equalsIgnoreCase(browserName)) {
+            System.setProperty(DriverConfigs.CHROME.getName(), DriverConfigs.CHROME.getPath());
             webDriver = new ChromeDriver();
-        } else if (DriverConfigs.FIREFOX_NAME.equalsIgnoreCase(browserName)) {
-            System.setProperty(DriverConfigs.FIREFOX_NAME, DriverConfigs.FIREFOX_DRIVER_LOCATION);
+        } else if (DriverConfigs.FIREFOX.getName().equalsIgnoreCase(browserName)) {
+            System.setProperty(DriverConfigs.FIREFOX.getName(), DriverConfigs.FIREFOX.getName());
             webDriver = new FirefoxDriver();
-        } else if (DriverConfigs.EDGE_NAME.equalsIgnoreCase(browserName)) {
-            System.setProperty(DriverConfigs.EDGE_NAME, DriverConfigs.EDGE_DRIVER_LOCATION);
+        } else if (DriverConfigs.EDGE.getName().equalsIgnoreCase(browserName)) {
+            System.setProperty(DriverConfigs.EDGE.getName(), DriverConfigs.EDGE.getPath());
             webDriver = new EdgeDriver();
+        } else {
+            throw new InvalidParameterException("\tERROR: Unknown browser name=" + browserName);
         }
-        assert webDriver != null;
         webDriver.manage().window().maximize();
         webDriver.manage().timeouts()
                 .implicitlyWait(Duration.ofSeconds(Long.parseLong(DriverConfigs.IMPLICITLY_WAIT_TIME)));
     }
 
-    public WebDriver getDriver() {
+    public static WebDriver getDriver() {
+        if (webDriver == null){
+            throw new NullPointerException("\tERROR: WebDriver isn't initialized");
+        }
         return webDriver;
     }
 
-    protected void quitDriver() {
+    public static void quitDriver() {
         if (webDriver != null) {
             webDriver.quit();
             webDriver = null;

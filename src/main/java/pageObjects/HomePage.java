@@ -3,8 +3,6 @@ package pageObjects;
 import consts.BusinessConfigs;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.testng.Assert;
 
 public class HomePage extends AbstractPage {
 
@@ -12,7 +10,7 @@ public class HomePage extends AbstractPage {
 
     private final By signInButton = By.xpath("//a[@class='header-auth__signin']//span");
 
-    private final By topRightCornerUserNameElement = By.className("user-info__name");
+    private final By topRightCornerUserNameElement = By.xpath("//div[@class='user-navigation-container']//div[@class='user-info__name']");
 
     private final By trainingListPageButton = By.xpath("//ul[@class='main-nav__list']//a[contains(@class,'training')]");
 
@@ -22,21 +20,14 @@ public class HomePage extends AbstractPage {
 
     private final By FAQPageButton = By.xpath("//ul[@class='main-nav__list']//a[contains(@class,'faq')]");
 
-    public HomePage(WebDriver driver) {
-        super(driver);
-    }
-
-
-    public SignInPage clickSignInButton() {
+    public void clickSignInButton() {
         getElement(signInButton).click();
         LOG.info("'Sign in' button clicked");
-        return new SignInPage(getWebDriver());
     }
 
-    public HomePage proceedToHomePage() {
-        proceedToPage(BusinessConfigs.HOME_PAGE_URL);
+    public void proceedToHomePage() {
+        proceedToPage(BusinessConfigs.HOME_PAGE_URL.getValue());
         LOG.info(String.format("Proceeded to '%s' URL.", BusinessConfigs.HOME_PAGE_URL));
-        return this;
     }
 
     public boolean isUserNameDisplayed() {
@@ -52,18 +43,12 @@ public class HomePage extends AbstractPage {
     public AboutPage openAboutPage() {
         getElement(aboutPageButton).click();
         LOG.info("Open 'About' page.");
-        return new AboutPage(getWebDriver());
+        return new AboutPage();
     }
 
     public FAQPage openFAQPage() {
         getElement(FAQPageButton).click();
         LOG.info("Open 'FAQ' page.");
-        return new FAQPage(getWebDriver());
+        return new FAQPage();
     }
-
-    public void verifyUserIsLoggedIn() {
-        Assert.assertTrue(isUserNameDisplayed(), "User is not logged in");
-    }
-
-
 }

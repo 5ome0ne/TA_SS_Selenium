@@ -2,8 +2,7 @@ package pageObjects;
 
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.testng.Assert;
+import org.testng.asserts.SoftAssert;
 
 public class SignInPage extends AbstractPage {
 
@@ -15,20 +14,23 @@ public class SignInPage extends AbstractPage {
 
     private final By continueButton = By.id("kc-login-next");
 
+    private final By continueButtonDisabled = By.xpath("//button[@id='kc-login-next' and @disabled]");
+
+    private final By continueButtonEnabled = By.xpath("//button[@id='kc-login-next' and not(@disabled)]");
+
     private final By signInButton = By.id("kc-login");
 
     private final By loginFailedErrorMessage = By.xpath("//span[@class='error-text']");
 
-    private final By userName = By.xpath("//div[@class='user-navigation-container']//div[@class='user-info__name']");
-
-    public SignInPage(WebDriver webDriver) {
-        super(webDriver);
-    }
-
     public SignInPage enterEmail(String email) {
         getElement(mailInput).sendKeys(email);
-        LOG.info("Mail was entered.");
+        LOG.info("Mail [" + email + "] was entered.");
         return this;
+    }
+
+    public void clearEmailField() {
+        getElement(mailInput).clear();
+        LOG.info("Mail field was cleared.");
     }
 
     public SignInPage enterPassword(String password) {
@@ -43,10 +45,9 @@ public class SignInPage extends AbstractPage {
         return this;
     }
 
-    public SignInPage clickSignInButton() {
+    public void clickSignInButton() {
         getElement(signInButton).click();
         LOG.info("Sign in button clicked.");
-        return this;
     }
 
     public boolean isLoginFailedErrorMessageDisplayed() {
@@ -55,19 +56,21 @@ public class SignInPage extends AbstractPage {
         return isDisplayed;
     }
 
-    public void verifyFailedLoginErrorMessageDisplayed() {
-        Assert.assertTrue(isLoginFailedErrorMessageDisplayed(),
-                "'Login failed' error message is not displayed");
-    }
-
-    private boolean isUserNameDisplayed() {
-        boolean isDisplayed = isDisplayed(userName);
-        LOG.info(String.format("Is 'Login Success' user name displayed': '%s'", isDisplayed));
+    public boolean isContinueButtonNotActive() {
+        boolean isDisplayed = isDisplayed(continueButtonDisabled);
+        LOG.info(String.format("Is 'Continue button' inactive': '%s'", isDisplayed));
         return isDisplayed;
     }
 
-    public void verifyUserNameDisplayed() {
-        Assert.assertTrue(isUserNameDisplayed(),
-                "'Login failed' user name is not displayed");
+    public boolean isContinueButtonActive() {
+        boolean isDisplayed = isDisplayed(continueButtonEnabled);
+        LOG.info(String.format("Is 'Continue button' active': '%s'", isDisplayed));
+        return isDisplayed;
+    }
+
+    public boolean isPasswordInputDisplayed() {
+        boolean isDisplayed = isDisplayed(passwordInput);
+        LOG.info(String.format("Is 'Enter Password Window' displayed': '%s'", isDisplayed));
+        return isDisplayed;
     }
 }

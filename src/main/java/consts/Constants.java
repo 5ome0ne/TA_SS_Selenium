@@ -1,10 +1,17 @@
 package consts;
 
 public enum Constants {
-    ;
-    public static final String CONFIG_PROPERTIES_PATH = "src/main/resources/config.properties";
+    CONFIG_PROPERTIES_PATH("src/main/resources/config.properties"),
+    DRIVER_PROPERTY_TAG("driver"),
+    BUSINESS_PROPERTY_TAG("business");
 
-    public static final String DEFAULT_BROWSER_NAME = "webdriver.chrome.driver";
-    public static final String DRIVER_PROPERTY_TAG = "driver";
-    public static final String BUSINESS_PROPERTY_TAG = "business";
+    private final String value;
+
+    Constants(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

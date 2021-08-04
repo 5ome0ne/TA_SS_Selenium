@@ -3,6 +3,7 @@ package pageObjects;
 import consts.DriverConfigs;
 import driver.DriverFactory;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -11,40 +12,36 @@ import java.util.List;
 
 public class AbstractPage {
 
-    //    private static final WebDriverWait wait =  new WebDriverWait(webDriver, Duration.ofSeconds(DriverConfigs.DIVER_WAIT_TIME));
-    private final WebDriverWait wait;
-    private final WebDriver webDriver;
-
-    AbstractPage(WebDriver webDriver) {
-        this.webDriver = webDriver;
-        wait = new WebDriverWait(webDriver, Duration.ofSeconds(DriverConfigs.DIVER_WAIT_TIME));
-    }
+    private final WebDriverWait wait =
+            new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(DriverConfigs.DIVER_WAIT_TIME));
 
     void proceedToPage(final String url) {
-        webDriver.get(url);
+        DriverFactory.getDriver().get(url);
     }
 
     WebElement getElement(By locator) {
-        WebElement webElement = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        return webElement;
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     List<WebElement> getElements(By locator) {
-        return webDriver.findElements(locator);
-//        return DriverFactory.getDriver().findElements(locator);
+        return DriverFactory.getDriver().findElements(locator);
     }
-
 
     public boolean isDisplayed(By locator) {
         try {
-            WebElement result = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-            return result.isDisplayed();
+            return getElement(locator).isDisplayed();
         } catch (NoSuchElementException | TimeoutException e) {
             return false;
         }
     }
 
-    public WebDriver getWebDriver() {
-        return webDriver;
+    public void moveToElement(By locator) {
+        WebElement element = DriverFactory.getDriver().findElement(locator);
+        Actions actions = new Actions(DriverFactory.getDriver());
+        actions.moveToElement(element);
+        actions.perform();
+
+        JavascriptExecutor jse = (JavascriptExecutor) DriverFactory.getDriver();
+        jse.executeScript("window.scrollBy(0, 500)");
     }
 }

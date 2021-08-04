@@ -1,16 +1,30 @@
 package consts;
 
+import utils.PropertiesLoader;
+
 public enum BusinessConfigs {
-    ;
-    public final static String BASE_URL = PropertiesLoader
-            .getValue(PropertiesLoader.buildKey(Constants.BUSINESS_PROPERTY_TAG, "BASE_URL"));
+    BASE_URL(PropertiesLoader.getValue(
+            PropertiesLoader.buildKey(Constants.BUSINESS_PROPERTY_TAG.getValue(), "BASE_URL"))),
+    HOME_PAGE_URL(BASE_URL.getValue() + PropertiesLoader.getValue(
+            PropertiesLoader.buildKey(Constants.BUSINESS_PROPERTY_TAG.getValue(), "HOME_PAGE_URL"))),
+    TRAINING_LIST_PAGE_URL(BASE_URL.getValue() + PropertiesLoader.getValue(
+            PropertiesLoader.buildKey(Constants.BUSINESS_PROPERTY_TAG.getValue(), "TRAINING_LIST_PAGE_URL"))),
 
-    public final static String HOME_PAGE_URL = BASE_URL + PropertiesLoader.getValue(PropertiesLoader
-            .buildKey(Constants.BUSINESS_PROPERTY_TAG, "HOME_PAGE_URL"));
+    BLOG_PAGE_URL(BASE_URL.getValue() + PropertiesLoader.getValue(
+            PropertiesLoader.buildKey(Constants.BUSINESS_PROPERTY_TAG.getValue(), "BLOG_PAGE_URL"))),
 
-    public final static String CORRECT_MAIL = PropertiesLoader.getValue(PropertiesLoader
-            .buildKey(Constants.BUSINESS_PROPERTY_TAG, "CORRECT_MAIL"));
+    CORRECT_MAIL(PropertiesLoader.getValue(
+            PropertiesLoader.buildKey(Constants.BUSINESS_PROPERTY_TAG.getValue(), "CORRECT_MAIL"))),
+    CORRECT_PASSWORD(PropertiesLoader.getValue(
+            PropertiesLoader.buildKey(Constants.BUSINESS_PROPERTY_TAG.getValue(), "CORRECT_PASSWORD")));
 
-    public final static String CORRECT_PASSWORD = PropertiesLoader.getValue(PropertiesLoader
-            .buildKey(Constants.BUSINESS_PROPERTY_TAG, "CORRECT_PASSWORD"));
+    private final String value;
+
+    BusinessConfigs(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

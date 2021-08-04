@@ -1,4 +1,6 @@
-package consts;
+package utils;
+
+import consts.Constants;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,7 +21,7 @@ public class PropertiesLoader {
     private static void readProperties() {
         Properties appProps = new Properties();
         try {
-            appProps.load(new FileInputStream(Constants.CONFIG_PROPERTIES_PATH));
+            appProps.load(new FileInputStream(Constants.CONFIG_PROPERTIES_PATH.getValue()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -35,6 +37,7 @@ public class PropertiesLoader {
     public static String getValue(String key) {
         return properties.get(key);
     }
+
     public static String buildKey(String tag, String key) {
         return tag + "." + key;
     }

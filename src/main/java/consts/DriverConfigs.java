@@ -1,23 +1,47 @@
 package consts;
 
-public enum DriverConfigs {
-    ;
+import utils.PropertiesLoader;
 
-    public final static String CHROME_NAME = PropertiesLoader.getValue(PropertiesLoader
-            .buildKey(Constants.DRIVER_PROPERTY_TAG, "CHROME_NAME"));
-    public final static String FIREFOX_NAME = PropertiesLoader.getValue(PropertiesLoader
-            .buildKey(Constants.DRIVER_PROPERTY_TAG, "FIREFOX_NAME"));
-    public final static String EDGE_NAME = PropertiesLoader.getValue(PropertiesLoader
-            .buildKey(Constants.DRIVER_PROPERTY_TAG, "EDGE_NAME"));
-    public final static String CHROME_DRIVER_LOCATION = PropertiesLoader.getValue(PropertiesLoader
-            .buildKey(Constants.DRIVER_PROPERTY_TAG, "CHROME_DRIVER_LOCATION"));
-    public final static String FIREFOX_DRIVER_LOCATION = PropertiesLoader.getValue(PropertiesLoader
-            .buildKey(Constants.DRIVER_PROPERTY_TAG, "FIREFOX_DRIVER_LOCATION"));
-    public final static String EDGE_DRIVER_LOCATION = PropertiesLoader.getValue(PropertiesLoader
-            .buildKey(Constants.DRIVER_PROPERTY_TAG, "EDGE_DRIVER_LOCATION"));
+public enum DriverConfigs {
+    CHROME(
+            PropertiesLoader.getValue(
+                    PropertiesLoader.buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(), "CHROME_NAME")),
+            PropertiesLoader.getValue(
+                    PropertiesLoader.buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(), "CHROME_DRIVER_LOCATION"))
+    ),
+    FIREFOX(PropertiesLoader.getValue(
+                    PropertiesLoader.buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(), "FIREFOX_NAME")),
+            PropertiesLoader.getValue(
+                    PropertiesLoader.buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(), "EDGE_DRIVER_LOCATION"))
+    ),
+    EDGE(PropertiesLoader.getValue(
+                    PropertiesLoader.buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(), "EDGE_NAME")),
+            PropertiesLoader.getValue(
+                    PropertiesLoader.buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(),"CHROME_DRIVER_LOCATION"))
+    );
+
+    private final String name;
+    private final String path;
+
+    DriverConfigs(String name, String path) {
+        this.name = name;
+        this.path = path;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
     public final static String IMPLICITLY_WAIT_TIME = PropertiesLoader.getValue(PropertiesLoader
-            .buildKey(Constants.DRIVER_PROPERTY_TAG, "IMPLICITLY_WAIT_TIME"));
+            .buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(), "IMPLICITLY_WAIT_TIME"));
 
     public final static int DIVER_WAIT_TIME = Integer.parseInt(PropertiesLoader.getValue(PropertiesLoader
-            .buildKey(Constants.DRIVER_PROPERTY_TAG, "DIVER_WAIT_TIME")));
-}
+            .buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(), "DIVER_WAIT_TIME")));
+
+    public static final String DEFAULT_BROWSER_NAME = "webdriver.chrome.driver";
+
+    }
