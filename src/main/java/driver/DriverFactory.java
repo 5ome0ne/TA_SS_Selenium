@@ -1,6 +1,8 @@
 package driver;
 
+import consts.Constants;
 import consts.DriverConfigs;
+import consts.properties.ConfigProperties;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -28,7 +30,8 @@ public abstract class DriverFactory {
         }
         webDriver.manage().window().maximize();
         webDriver.manage().timeouts()
-                .implicitlyWait(Duration.ofSeconds(Long.parseLong(DriverConfigs.IMPLICITLY_WAIT_TIME)));
+                .implicitlyWait(Duration.ofSeconds(Long.parseLong(ConfigProperties.getValue(
+                        Constants.DRIVER_PROP_TAG.getValue(), "IMPLICITLY_WAIT_TIME"))));
     }
 
     public static WebDriver getDriver() {

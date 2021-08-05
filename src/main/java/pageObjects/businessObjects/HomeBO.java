@@ -1,11 +1,11 @@
 package pageObjects.businessObjects;
 
-import consts.BusinessConfigs;
+import consts.Constants;
 import org.testng.Assert;
 import pageObjects.HomePage;
 
 public class HomeBO {
-    private HomePage homePage;
+    private final HomePage homePage;
 
     public HomeBO() {
         homePage = new HomePage();
@@ -33,14 +33,15 @@ public class HomeBO {
     public HomeBO loginWithAppropriateCredentials() {
         proceedToHomePage()
         .clickSignInButton()
-        .login(BusinessConfigs.CORRECT_MAIL.getValue(), BusinessConfigs.CORRECT_PASSWORD.getValue());
+        .login(Constants.CORRECT_MAIL.getValue(), Constants.CORRECT_PASSWORD.getValue());
         return this;
     }
 
-//    ????????????????????????????????????????????????????????????????????????????????????????????????????????????????
-//    public <T extends AbstractPage> T openPage(Class<T> page){
-//        try {
-//            Method method =
-//        }
-//    }
+    public BlogBO openBlogPage() {
+        return homePage.openBlogPage();
+    }
+
+    public TrainingListBO openTrainingListPage() {
+        return homePage.openTrainingListPage();
+    }
 }

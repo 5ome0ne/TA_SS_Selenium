@@ -2,7 +2,6 @@ package pageObjects;
 
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
-import org.testng.asserts.SoftAssert;
 
 public class SignInPage extends AbstractPage {
 

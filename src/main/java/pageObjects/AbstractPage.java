@@ -1,9 +1,10 @@
 package pageObjects;
 
-import consts.DriverConfigs;
+import consts.Constants;
+import consts.properties.ConfigProperties;
 import driver.DriverFactory;
+import org.apache.log4j.Logger;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -13,35 +14,42 @@ import java.util.List;
 public class AbstractPage {
 
     private final WebDriverWait wait =
-            new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(DriverConfigs.DIVER_WAIT_TIME));
+            new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(Long.parseLong(ConfigProperties.getValue(
+                    Constants.DRIVER_PROP_TAG.getValue(), "DIVER_WAIT_TIME"))));
+
+    private static final Logger LOG = Logger.getLogger(AbstractPage.class);
 
     void proceedToPage(final String url) {
         DriverFactory.getDriver().get(url);
     }
 
     WebElement getElement(By locator) {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        WebElement result = null;
+        try {
+            result = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        } catch (NoSuchElementException | TimeoutException e) {
+            LOG.error(String.format("\t--->Can't find element by locator '%s'", locator));
+        }
+        return result;
     }
 
     List<WebElement> getElements(By locator) {
-        return DriverFactory.getDriver().findElements(locator);
+        List<WebElement> elementsList = null;
+        try {
+            elementsList = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
+        } catch (StaleElementReferenceException ex) {
+            elementsList = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
+        } catch (NoSuchElementException | TimeoutException e) {
+            LOG.error(String.format("\t--->Can't find elements List by locator '%s'", locator));
+        }
+        return elementsList;
     }
 
     public boolean isDisplayed(By locator) {
-        try {
+        WebElement element = getElement(locator);
+        if (element != null) {
             return getElement(locator).isDisplayed();
-        } catch (NoSuchElementException | TimeoutException e) {
+        } else
             return false;
-        }
-    }
-
-    public void moveToElement(By locator) {
-        WebElement element = DriverFactory.getDriver().findElement(locator);
-        Actions actions = new Actions(DriverFactory.getDriver());
-        actions.moveToElement(element);
-        actions.perform();
-
-        JavascriptExecutor jse = (JavascriptExecutor) DriverFactory.getDriver();
-        jse.executeScript("window.scrollBy(0, 500)");
     }
 }

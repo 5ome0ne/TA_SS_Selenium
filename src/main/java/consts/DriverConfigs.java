@@ -1,23 +1,14 @@
 package consts;
 
-import utils.PropertiesLoader;
-
 public enum DriverConfigs {
-    CHROME(
-            PropertiesLoader.getValue(
-                    PropertiesLoader.buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(), "CHROME_NAME")),
-            PropertiesLoader.getValue(
-                    PropertiesLoader.buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(), "CHROME_DRIVER_LOCATION"))
+    CHROME("webdriver.chrome.driver",
+            "src/main/resources/chromedriver.exe"
     ),
-    FIREFOX(PropertiesLoader.getValue(
-                    PropertiesLoader.buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(), "FIREFOX_NAME")),
-            PropertiesLoader.getValue(
-                    PropertiesLoader.buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(), "EDGE_DRIVER_LOCATION"))
+    FIREFOX("webdriver.gecko.driver",
+            "src/main/resources/geckodriver.exe"
     ),
-    EDGE(PropertiesLoader.getValue(
-                    PropertiesLoader.buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(), "EDGE_NAME")),
-            PropertiesLoader.getValue(
-                    PropertiesLoader.buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(),"CHROME_DRIVER_LOCATION"))
+    EDGE("webdriver.edge.driver",
+            "src/main/resources/MicrosoftWebDriver.exe"
     );
 
     private final String name;
@@ -36,12 +27,5 @@ public enum DriverConfigs {
         return path;
     }
 
-    public final static String IMPLICITLY_WAIT_TIME = PropertiesLoader.getValue(PropertiesLoader
-            .buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(), "IMPLICITLY_WAIT_TIME"));
-
-    public final static int DIVER_WAIT_TIME = Integer.parseInt(PropertiesLoader.getValue(PropertiesLoader
-            .buildKey(Constants.DRIVER_PROPERTY_TAG.getValue(), "DIVER_WAIT_TIME")));
-
     public static final String DEFAULT_BROWSER_NAME = "webdriver.chrome.driver";
-
-    }
+}

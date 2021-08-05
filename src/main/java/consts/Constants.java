@@ -1,9 +1,12 @@
 package consts;
 
 public enum Constants {
-    CONFIG_PROPERTIES_PATH("src/main/resources/config.properties"),
-    DRIVER_PROPERTY_TAG("driver"),
-    BUSINESS_PROPERTY_TAG("business");
+    CONFIG_PROP_PATH("src/main/resources/config.properties"),
+    DRIVER_PROP_TAG("driver"),
+    BUSINESS_PROP_TAG("business"),
+
+    CORRECT_MAIL("ivanhorintest@gmail.com"),
+    CORRECT_PASSWORD("ivanhorintestPassword");
 
     private final String value;
 

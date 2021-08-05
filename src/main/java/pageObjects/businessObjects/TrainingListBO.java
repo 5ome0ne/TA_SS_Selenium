@@ -1,7 +1,6 @@
 package pageObjects.businessObjects;
 
 import org.testng.Assert;
-import org.testng.asserts.SoftAssert;
 import pageObjects.TrainingListPage;
 
 public class TrainingListBO {
@@ -11,16 +10,6 @@ public class TrainingListBO {
         trainingListPage = new TrainingListPage();
     }
 
-    public TrainingListBO proceedToTrainingListPage() {
-        trainingListPage.proceedToTrainingListPage();
-        return this;
-    }
-
-    public TrainingListBO scrollToSearchElement() {
-        trainingListPage.moveToSearchElement();
-        return this;
-    }
-
     public TrainingListBO clickOnSearchElement() {
         trainingListPage.clickOnSearchElement();
         return this;
@@ -28,15 +17,13 @@ public class TrainingListBO {
 
     public TrainingListBO openSearchBySkills() {
         trainingListPage
-                .moveToSearchElement()
-                .clickOnSearchElement().
-                clickOnBySkillsTab();
+                .clickOnSearchElement()
+                .clickOnBySkillsTab();
         return this;
     }
 
     public TrainingListBO openClearedSearchMenu() {
-        return scrollToSearchElement()
-                .clearSelectedLocation()
+        return clearAllFilters()
                 .clickOnSearchElement();
     }
 
@@ -46,19 +33,13 @@ public class TrainingListBO {
     }
 
     public void verifyAllActiveCoursesContainsSkill(String skill) {
-        verifyAllActiveCoursesContainsSkill(skill, null);
+        Assert.assertTrue(
+                trainingListPage.isAllActiveCoursesContainsSkill(skill),
+                String.format("Check 'Skill present' failed - at least one of course without skill '%s'", skill));
     }
 
-    public void verifyAllActiveCoursesContainsSkill(String skill, SoftAssert softAssert) {
-        String message = "Check 'Skill present' failed - at least one of course without skill:" + skill;
-        boolean result = trainingListPage.isAllActiveCoursesContainsSkill(skill);
-        if (softAssert != null) {
-            softAssert.assertTrue(result, message);
-        } else Assert.assertTrue(result, message);
-    }
-
-    public TrainingListBO clearSelectedLocation() {
-        trainingListPage.clickOnClearSelectedLocationButton();
+    public TrainingListBO clearAllFilters() {
+        trainingListPage.clickOnClearAllFiltersButton();
         return this;
     }
 

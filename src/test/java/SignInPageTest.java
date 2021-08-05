@@ -1,43 +1,32 @@
-import consts.BusinessConfigs;
+import consts.Constants;
+import consts.ValidMailsValues;
 import dataProviders.MailsProvider;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 import pageObjects.businessObjects.HomeBO;
-import pageObjects.businessObjects.SignInBO;
 
-
-//            1:  2.  1 negative scenario test with verifying all the criteria using soft asserts
-//                    "and compare the difference with previous"    ???????
-//
-//            2: що краще? data-provider або перебір (foreach) коли можливо
-//
-//            3: чого працює label[normalize-space()='???']
-//            а label[normalize-space(text())='???'] ні?
-
+import java.util.Arrays;
 
 public class SignInPageTest extends BaseTest {
 
     @Test(description = "Verify user is successfully logged in with appropriate credentials")
     public void verifyUserSuccessfullyLoggedInWithAppropriateCredentials() {
-        HomeBO homeBO = new HomeBO();
-        homeBO
+        new HomeBO()
                 .loginWithAppropriateCredentials()
                 .verifyUserNameDisplayed();
     }
 
-    @Test(description = "Verify error message appears when user logging in with inappropriate credentials")
+    @Test(description = "Verify 'Error Message' appears when user logging in with inappropriate credentials")
     public void verifyErrorMessageAppearsForIncorrectUser() {
         new HomeBO()
                 .proceedToHomePage()
                 .clickSignInButton()
-                .login("incorrectmail@gmail.com", "incorrectPassword");
-        new SignInBO()
+                .login("non-existent@gmail.com", "incorrectPassword")
                 .verifyFailedLoginErrorMessageDisplayed();
     }
 
     @Test(dataProvider = "invalid-mails",
             dataProviderClass = MailsProvider.class,
-            description = "Verify continue button on ‘Sign In’ window shouldn't become enabled with incorrect mail format")
+            description = "[Provider]: Verify continue button on ‘Sign In’ window shouldn't become enabled with incorrect mail format")
     public void verifyContinueButtonShouldNotBecomeEnabledWithIncorrectMail(String email) {
         new HomeBO()
                 .proceedToHomePage()
@@ -49,35 +38,27 @@ public class SignInPageTest extends BaseTest {
     @Test(description = "[Hard assert]: Verify continue button on ‘Sign In’ window shouldn't become enabled with incorrect mail format")
     public void verifyContinueButtonShouldNotBecomeEnabledWithIncorrectMailHardAssert() {
 
-        Object[][] invalidMails = MailsProvider.invalidMails();
-        SignInBO signInBO = new HomeBO()
+        String[] invalidMailsArray = Arrays.stream(ValidMailsValues.values())
+                .map(ValidMailsValues::getMail)
+                .toArray(String[]::new);
+
+        new HomeBO()
                 .proceedToHomePage()
-                .clickSignInButton();
-        for (Object[] mail : invalidMails) {
-            signInBO
-                    .clearEmailField()
-                    .enterEmail((String) mail[0])
-                    .verifyContinueButtonIsNotActive();
-        }
+                .clickSignInButton()
+                .verifyContinueButtonIsNotActiveHardAssert(invalidMailsArray);
     }
 
     @Test(description = "[Soft assert]: Verify continue button on ‘Sign In’ window shouldn't become enabled with incorrect mail format")
     public void verifyContinueButtonShouldNotBecomeEnabledWithIncorrectMailSoftAssert() {
 
-        SignInBO signInBO = new HomeBO()
+        String[] invalidMailsArray = Arrays.stream(ValidMailsValues.values())
+                .map(ValidMailsValues::getMail)
+                .toArray(String[]::new);
+
+        new HomeBO()
                 .proceedToHomePage()
-                .clickSignInButton();
-
-        SoftAssert softAssert = new SoftAssert();
-        Object[][] invalidMails = MailsProvider.invalidMails();
-        for (Object[] mail : invalidMails) {
-            signInBO
-                    .clearEmailField()
-                    .enterEmail((String) mail[0])
-                    .verifyContinueButtonIsNotActive(softAssert);
-        }
-
-        softAssert.assertAll();
+                .clickSignInButton()
+                .verifyContinueButtonIsNotActiveSoftAssert(invalidMailsArray);
     }
 
     @Test(dataProvider = "valid-mails",
@@ -96,7 +77,7 @@ public class SignInPageTest extends BaseTest {
         new HomeBO()
                 .proceedToHomePage()
                 .clickSignInButton()
-                .enterEmail(BusinessConfigs.CORRECT_MAIL.getValue())
+                .enterEmail(Constants.CORRECT_MAIL.getValue())
                 .clickContinueButton()
                 .verifyPasswordInputAppears();
     }

@@ -1,24 +1,21 @@
-import dataProviders.LinksProvider;
+import consts.LinksTitlesValues;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
-import pageObjects.businessObjects.BlogBO;
 import pageObjects.businessObjects.HomeBO;
+
+import java.util.Arrays;
 
 public class BlogPageTest extends BaseTest {
 
     @Test(description = "[Soft assert]: Verify All links on ‘Blog’ Page are displayed")
     public void verifyLinksAreDisplayed() {
 
-        new HomeBO().loginWithAppropriateCredentials();
-        BlogBO blogBO = new BlogBO();
-        blogBO.proceedToBlogPage();
+        String[] linksTitlesArray = Arrays.stream(LinksTitlesValues.values())
+                .map(LinksTitlesValues::getLinkTitle)
+                .toArray(String[]::new);
 
-        SoftAssert softAssert = new SoftAssert();
-        Object[][] links = LinksProvider.validLinks();
-        for (Object[] linkTitle : links) {
-            blogBO.verifyLinkIsPresent((String) linkTitle[0], softAssert);
-        }
-
-        softAssert.assertAll();
+        new HomeBO()
+                .loginWithAppropriateCredentials()
+                .openBlogPage()
+                .verifyLinkIsDisplayedSoftAssert(linksTitlesArray);
     }
 }

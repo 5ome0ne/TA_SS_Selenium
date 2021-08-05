@@ -6,18 +6,20 @@ import pageObjects.SignInPage;
 
 public class SignInBO {
 
-    private SignInPage signInPage;
+    private static final String MSG_ERROR_CONTINUE_BTN_ACTIVE = "'Check incorrect mail format failed' continue button is active";
+    private final SignInPage signInPage;
 
     public SignInBO() {
         this.signInPage = new SignInPage();
     }
 
-    public void login(String email, String password) {
+    public SignInBO login(String email, String password) {
         signInPage
                 .enterEmail(email)
                 .clickContinueButton()
                 .enterPassword(password)
                 .clickSignInButton();
+        return this;
     }
 
     public SignInBO enterEmail(String email) {
@@ -32,15 +34,37 @@ public class SignInBO {
     }
 
     public void verifyContinueButtonIsNotActive() {
-        verifyContinueButtonIsNotActive(null);
+        Assert.assertTrue(signInPage.isContinueButtonNotActive(), MSG_ERROR_CONTINUE_BTN_ACTIVE);
     }
 
-    public void verifyContinueButtonIsNotActive(SoftAssert softAssert) {
+    public void verifyContinueButtonIsNotActiveHardAssert(SoftAssert softAssert) {
         String message = "'Check incorrect mail format failed' continue button is enabled";
         boolean result = signInPage.isContinueButtonNotActive();
         if (softAssert != null) {
             softAssert.assertTrue(result, message);
         } else Assert.assertTrue(result, message);
+    }
+
+    public void verifyContinueButtonIsNotActiveHardAssert(String[] invalidMailsArray) {
+        for (String mail : invalidMailsArray) {
+            this
+                .clearEmailField()
+                .enterEmail(mail)
+                .verifyContinueButtonIsNotActive();
+        }
+    }
+
+    public void verifyContinueButtonIsNotActiveSoftAssert(String[] invalidMailsArray) {
+        SoftAssert softAssert = new SoftAssert();
+        for (String mail : invalidMailsArray) {
+            this
+                    .clearEmailField()
+                    .enterEmail(mail);
+            softAssert.assertTrue(
+                    signInPage.isContinueButtonNotActive(),
+                    MSG_ERROR_CONTINUE_BTN_ACTIVE);
+        }
+        softAssert.assertAll();
     }
 
     public void verifyContinueButtonIsActive() {

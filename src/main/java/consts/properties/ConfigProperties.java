@@ -1,4 +1,4 @@
-package utils;
+package consts.properties;
 
 import consts.Constants;
 
@@ -8,37 +8,40 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class PropertiesLoader {
+public class ConfigProperties {
     private static HashMap<String, String> properties;
 
     static {
         readProperties();
     }
 
-    private PropertiesLoader() {
+    private ConfigProperties() {
     }
 
     private static void readProperties() {
         Properties appProps = new Properties();
         try {
-            appProps.load(new FileInputStream(Constants.CONFIG_PROPERTIES_PATH.getValue()));
+            appProps.load(new FileInputStream(Constants.CONFIG_PROP_PATH.getValue()));
         } catch (IOException e) {
             e.printStackTrace();
         }
         properties = typeCastConvert(appProps);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private static HashMap<String, String> typeCastConvert(Properties prop) {
-        Map<String, String> step2 = (Map<String, String>) (Map) prop;
-        return new HashMap<>(step2);
+        return new HashMap<>((Map<String, String>) (Map) prop);
     }
 
     public static String getValue(String key) {
         return properties.get(key);
     }
 
-    public static String buildKey(String tag, String key) {
+    private static String getFullKey(String tag, String key) {
         return tag + "." + key;
+    }
+
+    public static String getValue(String tag, String key) {
+        return getValue(getFullKey(tag, key));
     }
 }

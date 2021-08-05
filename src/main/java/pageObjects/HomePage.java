@@ -1,8 +1,11 @@
 package pageObjects;
 
-import consts.BusinessConfigs;
+import consts.Constants;
+import consts.properties.ConfigProperties;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
+import pageObjects.businessObjects.BlogBO;
+import pageObjects.businessObjects.TrainingListBO;
 
 public class HomePage extends AbstractPage {
 
@@ -26,8 +29,10 @@ public class HomePage extends AbstractPage {
     }
 
     public void proceedToHomePage() {
-        proceedToPage(BusinessConfigs.HOME_PAGE_URL.getValue());
-        LOG.info(String.format("Proceeded to '%s' URL.", BusinessConfigs.HOME_PAGE_URL));
+        String homePageUrl = ConfigProperties.getValue(Constants.BUSINESS_PROP_TAG.getValue(), "BASE_URL")
+                + ConfigProperties.getValue(Constants.BUSINESS_PROP_TAG.getValue(), "HOME_PAGE_URL");
+        proceedToPage(homePageUrl);
+        LOG.info(String.format("Proceeded to '%s' URL.", homePageUrl));
     }
 
     public boolean isUserNameDisplayed() {
@@ -50,5 +55,17 @@ public class HomePage extends AbstractPage {
         getElement(FAQPageButton).click();
         LOG.info("Open 'FAQ' page.");
         return new FAQPage();
+    }
+
+    public BlogBO openBlogPage() {
+        getElement(newsPageButton).click();
+        LOG.info("Open 'Blog' page.");
+        return new BlogBO();
+    }
+
+    public TrainingListBO openTrainingListPage() {
+        getElement(trainingListPageButton).click();
+        LOG.info("Open 'Training List' page.");
+        return new TrainingListBO();
     }
 }

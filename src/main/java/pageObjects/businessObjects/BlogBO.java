@@ -1,6 +1,5 @@
 package pageObjects.businessObjects;
 
-import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 import pageObjects.BlogPage;
 
@@ -12,20 +11,13 @@ public class BlogBO {
         this.blogPage = new BlogPage();
     }
 
-    public BlogBO proceedToBlogPage() {
-        blogPage.proceedToTrainingListPage();
-        return this;
-    }
-
-    public void verifyLinkIsPresent(String linkTitle) {
-        verifyLinkIsPresent(linkTitle, null);
-    }
-
-    public void verifyLinkIsPresent(String linkTitle, SoftAssert softAssert) {
-        String message = "'Check 'Link present' failed' - no one link with title:" + linkTitle;
-        boolean result = blogPage.isLinkPresent(linkTitle);
-        if (softAssert != null) {
-            softAssert.assertTrue(result, message);
-        } else Assert.assertTrue(result, message);
+    public void verifyLinkIsDisplayedSoftAssert(String[] linksTitlesArray) {
+        SoftAssert softAssert = new SoftAssert();
+        for (String title : linksTitlesArray) {
+            softAssert.assertTrue(
+                    blogPage.isLinkDisplayed(title),
+                    String.format("'Check 'Link present' failed' - no one link with title '%s'", title));
+        }
+        softAssert.assertAll();
     }
 }
