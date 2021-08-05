@@ -1,7 +1,7 @@
 package dataProviders;
 
-import consts.InvalidMailsValues;
-import consts.ValidMailsValues;
+import consts.values.InvalidMailsValues;
+import consts.values.ValidMailsValues;
 import org.testng.annotations.DataProvider;
 
 import java.util.Arrays;

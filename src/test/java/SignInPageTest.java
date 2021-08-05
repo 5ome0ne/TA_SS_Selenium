@@ -1,5 +1,5 @@
 import consts.Constants;
-import consts.ValidMailsValues;
+import consts.values.ValidMailsValues;
 import dataProviders.MailsProvider;
 import org.testng.annotations.Test;
 import pageObjects.businessObjects.HomeBO;

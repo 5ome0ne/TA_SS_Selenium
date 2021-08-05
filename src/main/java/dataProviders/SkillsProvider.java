@@ -1,6 +1,6 @@
 package dataProviders;
 
-import consts.SkillsValues;
+import consts.values.SkillsValues;
 import org.testng.annotations.DataProvider;
 
 import java.util.Arrays;

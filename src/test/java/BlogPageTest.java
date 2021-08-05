@@ -1,4 +1,4 @@
-import consts.LinksTitlesValues;
+import consts.values.LinksTitlesValues;
 import org.testng.annotations.Test;
 import pageObjects.businessObjects.HomeBO;
 

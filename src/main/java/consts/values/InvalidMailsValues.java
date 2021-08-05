@@ -1,4 +1,4 @@
-package consts;
+package consts.values;
 
 public enum InvalidMailsValues {
     VALUE00 ("testmaildomain.com"),

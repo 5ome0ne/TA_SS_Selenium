@@ -1,6 +1,6 @@
 package dataProviders;
 
-import consts.CountryCityValues;
+import consts.values.CountryCityValues;
 import org.testng.annotations.DataProvider;
 
 import java.util.Arrays;

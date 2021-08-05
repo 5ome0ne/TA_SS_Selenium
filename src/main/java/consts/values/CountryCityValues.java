@@ -1,4 +1,4 @@
-package consts;
+package consts.values;
 
 public enum CountryCityValues {
     VALUE00 ("Ukraine","Lviv"),

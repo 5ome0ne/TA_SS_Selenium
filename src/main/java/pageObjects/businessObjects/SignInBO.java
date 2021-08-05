@@ -37,14 +37,6 @@ public class SignInBO {
         Assert.assertTrue(signInPage.isContinueButtonNotActive(), MSG_ERROR_CONTINUE_BTN_ACTIVE);
     }
 
-    public void verifyContinueButtonIsNotActiveHardAssert(SoftAssert softAssert) {
-        String message = "'Check incorrect mail format failed' continue button is enabled";
-        boolean result = signInPage.isContinueButtonNotActive();
-        if (softAssert != null) {
-            softAssert.assertTrue(result, message);
-        } else Assert.assertTrue(result, message);
-    }
-
     public void verifyContinueButtonIsNotActiveHardAssert(String[] invalidMailsArray) {
         for (String mail : invalidMailsArray) {
             this
@@ -60,9 +52,8 @@ public class SignInBO {
             this
                     .clearEmailField()
                     .enterEmail(mail);
-            softAssert.assertTrue(
-                    signInPage.isContinueButtonNotActive(),
-                    MSG_ERROR_CONTINUE_BTN_ACTIVE);
+
+            softAssert.assertTrue(signInPage.isContinueButtonNotActive(),MSG_ERROR_CONTINUE_BTN_ACTIVE);
         }
         softAssert.assertAll();
     }

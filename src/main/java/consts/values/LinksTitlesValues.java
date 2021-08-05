@@ -1,4 +1,4 @@
-package consts;
+package consts.values;
 
 public enum LinksTitlesValues {
     VALUE00 ("News"),

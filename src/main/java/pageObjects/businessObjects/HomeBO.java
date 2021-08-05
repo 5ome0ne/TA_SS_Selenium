@@ -26,10 +26,6 @@ public class HomeBO {
                 "'Login failed' user name isn't displayed");
     }
 
-    public void verifyUserIsLoggedIn() {
-        Assert.assertTrue(homePage.isUserNameDisplayed(), "User is not logged in");
-    }
-
     public HomeBO loginWithAppropriateCredentials() {
         proceedToHomePage()
         .clickSignInButton()

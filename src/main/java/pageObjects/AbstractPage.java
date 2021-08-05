@@ -13,8 +13,9 @@ import java.util.List;
 
 public class AbstractPage {
 
-    private final WebDriverWait wait =
-            new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(Long.parseLong(ConfigProperties.getValue(
+    private final WebDriverWait wait = new WebDriverWait(
+            DriverFactory.getDriver(),
+            Duration.ofSeconds(Long.parseLong(ConfigProperties.getValue(
                     Constants.DRIVER_PROP_TAG.getValue(), "DIVER_WAIT_TIME"))));
 
     private static final Logger LOG = Logger.getLogger(AbstractPage.class);
@@ -24,19 +25,20 @@ public class AbstractPage {
     }
 
     WebElement getElement(By locator) {
-        WebElement result = null;
+        WebElement element = null;
         try {
-            result = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+            element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         } catch (NoSuchElementException | TimeoutException e) {
             LOG.error(String.format("\t--->Can't find element by locator '%s'", locator));
         }
-        return result;
+        return element;
     }
 
     List<WebElement> getElements(By locator) {
         List<WebElement> elementsList = null;
         try {
             elementsList = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
+            //fluentwait
         } catch (StaleElementReferenceException ex) {
             elementsList = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
         } catch (NoSuchElementException | TimeoutException e) {
