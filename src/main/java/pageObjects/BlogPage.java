@@ -13,16 +13,10 @@ public class BlogPage extends AbstractPage {
     private final By linksTitles = By.xpath("//div[@class='tab-nav__list separated-list']//span");
 
     public boolean isLinkDisplayed(String linkTitle) {
-        boolean isDisplayed = false;
         List<WebElement> linksElementsList = getElements(linksTitles);
-        //Opetoonal
-        if (linksElementsList != null && linksElementsList.size() > 0){
-            isDisplayed = linksElementsList.stream()
-                    .filter(e -> e.getText().equalsIgnoreCase(linkTitle))
-                    .findFirst()
-                    .map(WebElement::isDisplayed)
-                    .orElse(false);
-        }
+
+        boolean isDisplayed = linksElementsList.stream()
+                .anyMatch(e -> e.getText().equalsIgnoreCase(linkTitle));
 
         LOG.info(String.format("Is 'Link' with title '%s' displayed': '%s'", linkTitle, isDisplayed));
         return isDisplayed;

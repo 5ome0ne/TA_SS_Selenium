@@ -34,15 +34,15 @@ public class SignInBO {
     }
 
     public void verifyContinueButtonIsNotActive() {
-        Assert.assertTrue(signInPage.isContinueButtonNotActive(), MSG_ERROR_CONTINUE_BTN_ACTIVE);
+        Assert.assertFalse(signInPage.isContinueButtonEnabled(), MSG_ERROR_CONTINUE_BTN_ACTIVE);
     }
 
     public void verifyContinueButtonIsNotActiveHardAssert(String[] invalidMailsArray) {
         for (String mail : invalidMailsArray) {
             this
-                .clearEmailField()
-                .enterEmail(mail)
-                .verifyContinueButtonIsNotActive();
+                    .clearEmailField()
+                    .enterEmail(mail)
+                    .verifyContinueButtonIsNotActive();
         }
     }
 
@@ -52,14 +52,13 @@ public class SignInBO {
             this
                     .clearEmailField()
                     .enterEmail(mail);
-
-            softAssert.assertTrue(signInPage.isContinueButtonNotActive(),MSG_ERROR_CONTINUE_BTN_ACTIVE);
+            softAssert.assertFalse(signInPage.isContinueButtonEnabled(), MSG_ERROR_CONTINUE_BTN_ACTIVE);
         }
         softAssert.assertAll();
     }
 
     public void verifyContinueButtonIsActive() {
-        Assert.assertTrue(signInPage.isContinueButtonActive(), "'Check correct mail format failed' continue button isn't enabled");
+        Assert.assertTrue(signInPage.isContinueButtonEnabled(), "'Check correct mail format failed' continue button isn't enabled");
     }
 
     public SignInBO clearEmailField() {
@@ -73,6 +72,6 @@ public class SignInBO {
     }
 
     public void verifyPasswordInputAppears() {
-        Assert.assertTrue(signInPage.isPasswordInputDisplayed(), "'Password input' is not displayed");
+        Assert.assertTrue(signInPage.isPasswordInputClickable(), "'Password input' is not enabled");
     }
 }

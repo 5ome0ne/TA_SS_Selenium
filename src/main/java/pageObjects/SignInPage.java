@@ -13,10 +13,6 @@ public class SignInPage extends AbstractPage {
 
     private final By continueButton = By.id("kc-login-next");
 
-    private final By continueButtonDisabled = By.xpath("//button[@id='kc-login-next' and @disabled]");
-
-    private final By continueButtonEnabled = By.xpath("//button[@id='kc-login-next' and not(@disabled)]");
-
     private final By signInButton = By.id("kc-login");
 
     private final By loginFailedErrorMessage = By.xpath("//span[@class='error-text']");
@@ -50,26 +46,21 @@ public class SignInPage extends AbstractPage {
     }
 
     public boolean isLoginFailedErrorMessageDisplayed() {
-        boolean isDisplayed = isDisplayed(loginFailedErrorMessage);
+        boolean isDisplayed = false;
+        if (isExist(loginFailedErrorMessage)) isDisplayed = isDisplayedExpectVisibility(loginFailedErrorMessage);
         LOG.info(String.format("Is 'Login Failed' error message displayed': '%s'", isDisplayed));
         return isDisplayed;
     }
 
-    public boolean isContinueButtonNotActive() {
-        boolean isDisplayed = isDisplayed(continueButtonDisabled);
-        LOG.info(String.format("Is 'Continue button' inactive': '%s'", isDisplayed));
-        return isDisplayed;
+    public boolean isContinueButtonEnabled() {
+        boolean isEnabled = getElement(continueButton).isEnabled();
+        LOG.info(String.format("Is 'Continue button' active': '%s'", isEnabled));
+        return isEnabled;
     }
 
-    public boolean isContinueButtonActive() {
-        boolean isDisplayed = isDisplayed(continueButtonEnabled);
-        LOG.info(String.format("Is 'Continue button' active': '%s'", isDisplayed));
-        return isDisplayed;
-    }
-
-    public boolean isPasswordInputDisplayed() {
-        boolean isDisplayed = isDisplayed(passwordInput);
-        LOG.info(String.format("Is 'Enter Password Window' displayed': '%s'", isDisplayed));
-        return isDisplayed;
+    public boolean isPasswordInputClickable() {
+        boolean isClickable = isClickable(passwordInput);
+        LOG.info(String.format("Is 'Enter Password Window' clickable': '%s'", isClickable));
+        return isClickable;
     }
 }

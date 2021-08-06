@@ -4,8 +4,13 @@ import consts.Constants;
 import consts.properties.ConfigProperties;
 import driver.DriverFactory;
 import org.apache.log4j.Logger;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -13,44 +18,73 @@ import java.util.List;
 
 public class AbstractPage {
 
-    private final WebDriverWait wait = new WebDriverWait(
-            DriverFactory.getDriver(),
-            Duration.ofSeconds(Long.parseLong(ConfigProperties.getValue(
-                    Constants.DRIVER_PROP_TAG.getValue(), "DIVER_WAIT_TIME"))));
+    private final WebDriverWait wait = new WebDriverWait(DriverFactory.getDriver(),
+            Duration.ofSeconds(Long.parseLong(ConfigProperties.getValue(Constants.DRIVER_PROP_TAG.getValue(), "DIVER_WAIT_TIME"))));
 
-    private static final Logger LOG = Logger.getLogger(AbstractPage.class);
+    private final Wait<WebDriver> waitFluent = new FluentWait<>(DriverFactory.getDriver())
+            .withTimeout(Duration.ofSeconds(Long.parseLong(ConfigProperties.getValue(
+                    Constants.DRIVER_PROP_TAG.getValue(), "DIVER_FLUENT_WAIT_TIME"))))
+            .pollingEvery(Duration.ofSeconds(Long.parseLong(ConfigProperties.getValue(
+                    Constants.DRIVER_PROP_TAG.getValue(), "DIVER_FLUENT_POLL_TIME"))))
+            .ignoring(NoSuchElementException.class);
+
 
     void proceedToPage(final String url) {
         DriverFactory.getDriver().get(url);
     }
 
-    WebElement getElement(By locator) {
-        WebElement element = null;
-        try {
-            element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        } catch (NoSuchElementException | TimeoutException e) {
-            LOG.error(String.format("\t--->Can't find element by locator '%s'", locator));
-        }
-        return element;
+    protected WebElement getElement(By locator) {
+        return wait.until(driver -> driver.findElement(locator));
     }
 
-    List<WebElement> getElements(By locator) {
-        List<WebElement> elementsList = null;
-        try {
-            elementsList = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
-            //fluentwait
-        } catch (StaleElementReferenceException ex) {
-            elementsList = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
-        } catch (NoSuchElementException | TimeoutException e) {
-            LOG.error(String.format("\t--->Can't find elements List by locator '%s'", locator));
-        }
-        return elementsList;
+    protected List<WebElement> getElements(By locator) {
+        return wait.until(driver -> driver.findElements(locator));
     }
 
-    public boolean isDisplayed(By locator) {
+    protected WebElement getElementFluentWait(By locator) {
+        return waitFluent.until(driver -> driver.findElement(locator));
+    }
+
+    protected List<WebElement> getElementsFluentWait(By locator) {
+        return waitFluent.until(driver -> driver.findElements(locator));
+    }
+
+    protected WebElement getElementWaitToBeClickable(By locator) {
+        return wait.until(ExpectedConditions.elementToBeClickable(locator));
+    }
+
+    protected boolean isExist(By locator){
+        return !DriverFactory.getDriver().findElements(locator).isEmpty();
+    }
+
+    protected boolean isEnabled(By locator){
         WebElement element = getElement(locator);
         if (element != null) {
-            return getElement(locator).isDisplayed();
+            return element.isEnabled();
+        } else
+            return false;
+    }
+
+    protected boolean isClickable(By locator) {
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
+        if (element != null) {
+            return element.isDisplayed();
+        } else
+            return false;
+    }
+
+    protected boolean isDisplayed(By locator) {
+        WebElement element = getElement(locator);
+        if (element != null) {
+            return element.isDisplayed();
+        } else
+            return false;
+    }
+
+    protected boolean isDisplayedExpectVisibility(By locator) {
+        WebElement element = wait.until(ExpectedConditions.visibilityOf(DriverFactory.getDriver().findElement(locator)));
+        if (element != null) {
+            return element.isDisplayed();
         } else
             return false;
     }

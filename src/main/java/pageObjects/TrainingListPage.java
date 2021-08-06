@@ -10,18 +10,14 @@ public class TrainingListPage extends AbstractPage {
 
     private static final Logger LOG = Logger.getLogger(TrainingListPage.class);
 
-    private final String skillTag = "SKILL_TAG";
-    private final String countryTag = "COUNTRY_TAG";
-    private final String cityTag = "CITY_TAG";
-
     private final String skillCheckBoxXpathLocator =
-            "//input[@class='our-skills']/parent::label[normalize-space()='" + skillTag + "']";
+            "//input[@class='our-skills']/parent::label[normalize-space()='%s']";
 
     private final String countrySelectXpathLocator =
-            "//div[contains(@class, 'location__not-active-label city-name ng-binding') and normalize-space(text())='" + countryTag + "']";
+            "//div[contains(@class, 'location__not-active-label city-name ng-binding') and normalize-space(text())='%s']";
 
     private final String cityCheckBoxXpathLocator =
-            "//div[@class='location__cities']//label[@class='location__not-active-label ng-binding' and normalize-space()='" + cityTag + "']";
+            "//div[@class='location__cities']//label[@class='location__not-active-label ng-binding' and normalize-space()='%s']";
 
     private final By searchElement = By.xpath("//input[@class='input-field-search ng-pristine ng-untouched ng-valid']");
 
@@ -34,7 +30,7 @@ public class TrainingListPage extends AbstractPage {
             By.xpath("//div[@class='training-list__container training-list__desktop']//div[@class='training-item ng-isolate-scope']");
 
     private final String listOfActiveCoursesWithSkill =
-            "//div[@class='training-list__container training-list__desktop']//img[@src='/Content/images/BigLogo/" + skillTag + "_Icon.png']";
+            "//div[@class='training-list__container training-list__desktop']//img[@src='/Content/images/BigLogo/%s_Icon.png']";
 
     private final By listOfActiveCoursesLocation =
             By.xpath("//div[@class='training-list__container training-list__desktop']//span[@class='training-item__location--text ng-binding ng-scope']");
@@ -46,11 +42,11 @@ public class TrainingListPage extends AbstractPage {
     }
 
     public void clickOnClearAllFiltersButton() {
-        WebElement clearButton = getElement(clearAllFiltersButton);
-        if (clearButton != null) {
-            clearButton.click();
+        boolean isExist = isExist(clearAllFiltersButton);
+        if (isExist){
+            getElementWaitToBeClickable(clearAllFiltersButton).click();
         }
-        LOG.info(String.format("'Clear Selected filters' button: %s", (clearButton != null ? "clicked" : "absent")));
+        LOG.info(String.format("'Clear Selected filters' button: %s", (isExist ? "clicked" : "absent")));
     }
 
     public void clickOnBySkillsTab() {
@@ -60,31 +56,27 @@ public class TrainingListPage extends AbstractPage {
 
     public void clickOnSkillCheckBox(String skill) {
         getElement(By.xpath(
-                skillCheckBoxXpathLocator.replace(skillTag, skill))).click();
+                String.format(skillCheckBoxXpathLocator, skill))).click();
         LOG.info(String.format("CheckBox '%s' clicked", skill));
     }
 
     public void clickOnCountryMenu(String country) {
         getElement(By.xpath(
-                countrySelectXpathLocator.replace(countryTag, country))).click();
+                String.format(countrySelectXpathLocator, country))).click();
         LOG.info(String.format("Country '%s' selector clicked", country));
     }
 
     public boolean isAllActiveCoursesContainsSkill(String skill) {
-        List<WebElement> coursesList = getElements(listOfActiveCourses);
-        if (coursesList == null || coursesList.size() == 0){
+        List<WebElement> coursesList = getElementsFluentWait(listOfActiveCourses);
+        if (coursesList.isEmpty()) {
             LOG.info(String.format("Is 'Skill' '%s' present in all active courses': '%s'", skill, true));
             return true;
         }
-        List<WebElement> coursesWithSkillList = getElements(By.xpath(
-                listOfActiveCoursesWithSkill.replace(skillTag, skill)));
-        if (coursesWithSkillList == null){
-            LOG.info(String.format("Is 'Skill' '%s' present in all active courses': '%s'", skill, false));
-            return false;
-        }
+        List<WebElement> coursesWithSkillList = getElementsFluentWait(By.xpath(String.format(listOfActiveCoursesWithSkill, skill)));
 
         boolean isAllContains = coursesList.size() == coursesWithSkillList.size();
         LOG.info(String.format("Is 'Skill' '%s' present in all active courses': '%s'", skill, isAllContains));
+        LOG.info(String.format("All courses = '%s', with skill '%s' = '%s'", coursesList.size(), skill, coursesWithSkillList.size()));
         return isAllContains;
     }
 
@@ -94,7 +86,7 @@ public class TrainingListPage extends AbstractPage {
     }
 
     private By getLocatorByCity(String city) {
-        return By.xpath(cityCheckBoxXpathLocator.replace(cityTag, city));
+        return By.xpath(String.format(cityCheckBoxXpathLocator, city));
     }
 
     public boolean isAllActiveCoursesContainsCountry(String country) {

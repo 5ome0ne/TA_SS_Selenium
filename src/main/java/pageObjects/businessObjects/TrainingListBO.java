@@ -55,6 +55,6 @@ public class TrainingListBO {
 
     public void verifyAllActiveCoursesContainsCountryOrMultiLocation(String country) {
         boolean isAllContains = trainingListPage.isAllActiveCoursesContainsCountry(country);
-        Assert.assertTrue(isAllContains, "Check 'Country present' failed - at least one course with a country other than the given one:" + country);
+        Assert.assertTrue(isAllContains, "Check 'Country present' failed - at least one course with a country other than the given one: " + country);
     }
 }

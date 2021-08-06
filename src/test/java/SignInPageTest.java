@@ -1,10 +1,8 @@
 import consts.Constants;
-import consts.values.ValidMailsValues;
+import consts.values.MailValues;
 import dataProviders.MailsProvider;
 import org.testng.annotations.Test;
 import pageObjects.businessObjects.HomeBO;
-
-import java.util.Arrays;
 
 public class SignInPageTest extends BaseTest {
 
@@ -20,7 +18,9 @@ public class SignInPageTest extends BaseTest {
         new HomeBO()
                 .proceedToHomePage()
                 .clickSignInButton()
-                .login("non-existent@gmail.com", "incorrectPassword")
+                .login(
+                        MailValues.VALID.getMails()[0],
+                        MailValues.VALID.getMails()[0])
                 .verifyFailedLoginErrorMessageDisplayed();
     }
 
@@ -37,28 +37,18 @@ public class SignInPageTest extends BaseTest {
 
     @Test(description = "[Hard assert]: Verify continue button on ‘Sign In’ window shouldn't become enabled with incorrect mail format")
     public void verifyContinueButtonShouldNotBecomeEnabledWithIncorrectMailHardAssert() {
-
-        String[] invalidMailsArray = Arrays.stream(ValidMailsValues.values())
-                .map(ValidMailsValues::getMail)
-                .toArray(String[]::new);
-
         new HomeBO()
                 .proceedToHomePage()
                 .clickSignInButton()
-                .verifyContinueButtonIsNotActiveHardAssert(invalidMailsArray);
+                .verifyContinueButtonIsNotActiveHardAssert(MailValues.INVALID.getMails());
     }
 
     @Test(description = "[Soft assert]: Verify continue button on ‘Sign In’ window shouldn't become enabled with incorrect mail format")
     public void verifyContinueButtonShouldNotBecomeEnabledWithIncorrectMailSoftAssert() {
-
-        String[] invalidMailsArray = Arrays.stream(ValidMailsValues.values())
-                .map(ValidMailsValues::getMail)
-                .toArray(String[]::new);
-
         new HomeBO()
                 .proceedToHomePage()
                 .clickSignInButton()
-                .verifyContinueButtonIsNotActiveSoftAssert(invalidMailsArray);
+                .verifyContinueButtonIsNotActiveSoftAssert(MailValues.INVALID.getMails());
     }
 
     @Test(dataProvider = "valid-mails",

@@ -1,21 +1,23 @@
 package consts.values;
 
 public enum LinksTitlesValues {
-    VALUE00 ("News"),
-    VALUE01 ("FAKE Stories"),
-    VALUE02 ("Real Stories"),
-    VALUE03 ("Materials"),
-    VALUE04 ("Hard Skills"),
-    VALUE05 ("Soft Skills"),
-    VALUE06 ("Events");
+    VALID (new String[]{
+            "News",
+            "FAKE Stories",
+            "Real Stories",
+            "Materials",
+            "Hard Skills",
+            "Soft Skills",
+            "Events"
+    });
 
-    private final String linkTitle;
+    private final String[] linksTitles;
 
-    LinksTitlesValues(String linkTitle) {
-        this.linkTitle = linkTitle;
+    LinksTitlesValues(String[] linksTitles) {
+        this.linksTitles = linksTitles;
     }
 
-    public String getLinkTitle() {
-        return linkTitle;
+    public String[] getLinksTitles() {
+        return linksTitles;
     }
 }

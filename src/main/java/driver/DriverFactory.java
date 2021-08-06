@@ -13,9 +13,12 @@ import java.time.Duration;
 
 public abstract class DriverFactory {
 
-    private static WebDriver webDriver;
+    private static volatile WebDriver webDriver;
 
-    public static void initDriver(final String browserName) {
+    private DriverFactory() {
+    }
+
+    public static void initDriver(String browserName) {
         if (DriverConfigs.CHROME.getName().equalsIgnoreCase(browserName)) {
             System.setProperty(DriverConfigs.CHROME.getName(), DriverConfigs.CHROME.getPath());
             webDriver = new ChromeDriver();
@@ -35,9 +38,10 @@ public abstract class DriverFactory {
     }
 
     public static WebDriver getDriver() {
-        if (webDriver == null){
-            throw new NullPointerException("\tERROR: WebDriver isn't initialized");
-        }
+        if (webDriver == null)
+            synchronized (DriverFactory.class) {
+                if (webDriver == null) initDriver(DriverConfigs.DEFAULT_BROWSER_NAME);
+            }
         return webDriver;
     }
 

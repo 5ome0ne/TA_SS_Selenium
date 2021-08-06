@@ -1,8 +1,17 @@
 package consts.values;
 
 public enum SkillsValues {
-    VALUE00 ("Java"),
-    VALUE01 ("Ruby");
+    Java    ("Java"),
+    Java2   ("Java"),
+    Java3   ("Java"),
+    Java4   ("Java"),
+    ANDROID ("Android"),
+    IOS     ("iOS"),
+    PHP     ("PHP"),
+    ENGLISH ("English"),
+    Unity   ("Unity/C#"),
+    SAP     ("SAP"),
+    RPA     ("RPA");
 
     private final String skill;
 
